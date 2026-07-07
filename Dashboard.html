@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Cockpit - EduFlow</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex transition-colors duration-300 overflow-hidden">
+
+    <div id="dashboardToastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 glass-panel border-r flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0">
+        <div class="h-16 flex items-center justify-between px-4 border-b border-slate-200 dark:border-slate-800">
+            <div class="flex items-center gap-2">
+                <div class="p-1.5 bg-brand-600 text-white rounded-lg shadow-md">
+                    <i class="fa-solid fa-graduation-cap text-base"></i>
+                </div>
+                <span class="text-base font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent">EduFlow Cockpit</span>
+            </div>
+            <button id="closeSidebarBtn" class="lg:hidden p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <i class="fa-solid fa-angle-left"></i>
+            </button>
+        </div>
+
+        <nav id="sidebarNav" class="flex-1 overflow-y-auto p-3 space-y-1 custom-scrollbar text-xs font-medium text-slate-600 dark:text-slate-400">
+            </nav>
+
+        <div class="p-3 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-1 text-xs">
+            <div class="flex items-center gap-2 p-2 bg-slate-200/50 dark:bg-slate-900/50 rounded-xl mb-2">
+                <div class="w-7 h-7 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs">SA</div>
+                <div class="truncate">
+                    <p class="font-semibold text-slate-800 dark:text-slate-200 truncate">Super Administrator</p>
+                    <p class="text-[10px] text-slate-400 truncate">root@eduflow.internal</p>
+                </div>
+            </div>
+            <a href="profile.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-200/60 dark:hover:bg-slate-800/60 transition"><i class="fa-solid fa-gear"></i> System Settings</a>
+            <a href="login.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-rose-500 hover:bg-rose-500/10 transition"><i class="fa-solid fa-arrow-right-from-bracket"></i> Terminate Session</a>
+        </div>
+    </aside>
+
+    <div class="flex-1 lg:pl-64 flex flex-col h-screen overflow-hidden">
+        
+        <header class="h-16 glass-panel border-b flex items-center justify-between px-4 sm:px-6 z-30">
+            <div class="flex items-center gap-4 flex-1">
+                <button id="openSidebarBtn" class="lg:hidden p-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-200" aria-label="Open Navigation Menu">
+                    <i class="fa-solid fa-bars text-base"></i>
+                </button>
+                
+                <div class="relative max-w-md w-full hidden sm:block">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-magnifying-glass text-xs"></i></span>
+                    <input type="text" id="globalSearchInput" placeholder="Execute unified structural workspace lookup... (Press '/' to target)" class="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-brand-500 dark:focus:border-brand-500 transition">
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="ai-assistant.html" class="px-3 py-1.5 bg-gradient-to-r from-brand-600 to-indigo-600 text-white font-semibold text-xs rounded-xl flex items-center gap-1.5 shadow-md shadow-brand-500/10 hover:opacity-90 transition">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI Studio
+                </a>
+                <button id="dashboardThemeToggle" class="p-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800" aria-label="Switch Dark Configuration">
+                    <i class="fa-solid fa-circle-half-stroke text-xs"></i>
+                </button>
+                <div class="relative">
+                    <button id="notifyBtn" class="p-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 relative">
+                        <i class="fa-solid fa-bell text-xs"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full animate-ping"></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main id="mainContentContainer" class="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar bg-slate-50/50 dark:bg-slate-950/20">
+            </main>
+    </div>
+
+    <script>
+        // System Layout Architecture Registry Config Array Definition
+        const viewsRegistry = {
+            overview: {
+                title: "Dashboard Overview", icon: "fa-chart-pie-simple",
+                render: () => `
+                    <div class="space-y-6">
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                            <div>
+                                <h1 class="text-xl font-bold tracking-tight">Institutional System Intelligence Metrics</h1>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Live configuration log tracking metrics from active nodes</p>
+                            </div>
+                            <div class="text-xs font-medium text-slate-400">System Time Context: 2026 UTC</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+                                <div class="flex justify-between items-start mb-2"><span class="text-[10px] uppercase font-bold text-slate-400">Archived Students</span><i class="fa-solid fa-user-graduate text-brand-500"></i></div>
+                                <div class="text-xl font-bold">12,450</div>
+                                <span class="text-[10px] font-semibold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">+4.2% YoY</span>
+                            </div>
+                            <div class="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+                                <div class="flex justify-between items-start mb-2"><span class="text-[10px] uppercase font-bold text-slate-400">Active Faculty</span><i class="fa-solid fa-chalkboard-user text-indigo-500"></i></div>
+                                <div class="text-xl font-bold">382</div>
+                                <span class="text-[10px] font-semibold text-slate-400 bg-slate-500/10 px-1.5 py-0.5 rounded-full">Nominal</span>
+                            </div>
+                            <div class="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+                                <div class="flex justify-between items-start mb-2"><span class="text-[10px] uppercase font-bold text-slate-400">Compliance Rate</span><i class="fa-solid fa-calendar-circle-user text-emerald-500"></i></div>
+                                <div class="text-xl font-bold">94.82%</div>
+                                <span class="text-[10px] font-semibold text-rose-500 bg-rose-500/10 px-1.5 py-0.5 rounded-full">-0.3% MoM</span>
+                            </div>
+                            <div class="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+                                <div class="flex justify-between items-start mb-2"><span class="text-[10px] uppercase font-bold text-slate-400">Outstanding Ledgers</span><i class="fa-solid fa-wallet text-amber-500"></i></div>
+                                <div class="text-xl font-bold">$14,210</div>
+                                <span class="text-[10px] font-semibold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">Recovered 82%</span>
+                            </div>
+                        </div>
+
+                        <div class="grid lg:grid-cols-3 gap-6">
+                            <div class="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm lg:col-span-2">
+                                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Institutional Enrollment Data Flow Matrix</h3>
+                                <div class="h-64 relative"><canvas id="enrollmentTrendChart"></canvas></div>
+                            </div>
+                            <div class="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+                                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Departmental Resource Vectors</h3>
+                                <div class="h-64 relative flex items-center justify-center"><canvas id="departmentDistributionChart"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                init: () => {
+                    const ctxEnrollment = document.getElementById('enrollmentTrendChart')?.getContext('2d');
+                    if (ctxEnrollment) {
+                        new Chart(ctxEnrollment, {
+                            type: 'line',
+                            data: {
+                                labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q1-26', 'Q2-26'],
+                                datasets: [{
+                                    label: 'Active System Nodes Registered',
+                                    data: [9800, 10500, 11200, 11900, 12200, 12450],
+                                    borderColor: '#2563eb', tension: 0.4, fill: false
+                                }]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false }
+                        });
+                    }
+                    const ctxDept = document.getElementById('departmentDistributionChart')?.getContext('2d');
+                    if (ctxDept) {
+                        new Chart(ctxDept, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Engineering', 'Sciences', 'Business', 'Humanities'],
+                                datasets: [{
+                                    data: [45, 20, 25, 10],
+                                    backgroundColor: ['#2563eb', '#3b82f6', '#10b981', '#f59e0b']
+                                }]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false }
+                        });
+                    }
+                }
+            },
+            students: {
+                title: "Student Directories", icon: "fa-user-graduate",
+                render: () => `
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h1 class="text-lg font-bold">Student Identity Management Directory</h1>
+                                <p class="text-xs text-slate-400">Direct CRUD integration pipeline to active collections data</p>
+                            </div>
+                            <button onclick="window.triggerAddMockStudent()" class="px-3 py-2 bg-brand-600 text-white rounded-xl text-xs font-semibold hover:bg-brand-700 transition flex items-center gap-1"><i class="fa-solid fa-plus"></i> Register Student Record</button>
+                        </div>
+                        <div class="p-4 bg-white dark:bg-slate-900 border rounded-2xl overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-left text-xs border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400 font-bold uppercase tracking-wider">
+                                        <th class="pb-3 pl-2">System UID</th><th class="pb-3">Legal Name</th><th class="pb-3">Affiliation Pipeline</th><th class="pb-3">Status</th><th class="pb-3 pr-2 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentTableBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-600 dark:text-slate-300">
+                                    <tr><td class="py-3 pl-2 font-mono text-[10px]">STU-9421-26</td><td class="py-3 font-semibold text-slate-900 dark:text-white">Alex Rivers</td><td class="py-3">Computer Science Eng. (B.Tech)</td><td><span class="px-2 py-0.5 text-[10px] bg-emerald-500/10 text-emerald-500 rounded-full font-medium">Active Matriculated</span></td><td class="py-3 pr-2 text-right font-medium"><button class="text-brand-600 hover:underline mr-2">Edit</button><button class="text-rose-500 hover:underline">Delete</button></td></tr>
+                                    <tr><td class="py-3 pl-2 font-mono text-[10px]">STU-8840-26</td><td class="py-3 font-semibold text-slate-900 dark:text-white">Morgan Brooks</td><td class="py-3">Mechanical Engineering Systems</td><td><span class="px-2 py-0.5 text-[10px] bg-emerald-500/10 text-emerald-500 rounded-full font-medium">Active Matriculated</span></td><td class="py-3 pr-2 text-right font-medium"><button class="text-brand-600 hover:underline mr-2">Edit</button><button class="text-rose-500 hover:underline">Delete</button></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `,
+                init: () => {
+                    window.triggerAddMockStudent = () => {
+                        const tbody = document.getElementById('studentTableBody');
+                        const newRow = document.createElement('tr');
+                        const randID = Math.floor(1000 + Math.random() * 9000);
+                        newRow.innerHTML = `<td class="py-3 pl-2 font-mono text-[10px]">STU-${randID}-26</td><td class="py-3 font-semibold text-slate-900 dark:text-white">New Sample Candidate</td><td class="py-3">Electrical Engineering Tracks</td><td><span class="px-2 py-0.5 text-[10px] bg-amber-500/10 text-amber-500 rounded-full font-medium">Pending Review</span></td><td class="py-3 pr-2 text-right font-medium"><button class="text-brand-600 hover:underline mr-2">Edit</button><button class="text-rose-500 hover:underline">Delete</button></td>`;
+                        tbody.appendChild(newRow);
+                        window.dispatchToast('New student asset record dynamically allocated inside current viewport session context.', 'success');
+                    }
+                }
+            },
+            faculty: {
+                title: "Faculty Control", icon: "fa-chalkboard-user",
+                render: () => `
+                    <div class="space-y-4">
+                        <h1 class="text-lg font-bold">Faculty Personnel Registers</h1>
+                        <p class="text-xs text-slate-400">Departmental deployment logs and assignment tracking records</p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="p-4 bg-white dark:bg-slate-900 border rounded-2xl flex gap-3 items-center">
+                                <div class="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center text-lg"><i class="fa-solid fa-user-tie"></i></div>
+                                <div><h4 class="font-bold text-sm">Dr. Evelyn Vance</h4><p class="text-xs text-slate-400">Head of Department - AI & Cognitive Architectures</p></div>
+                            </div>
+                            <div class="p-4 bg-white dark:bg-slate-900 border rounded-2xl flex gap-3 items-center">
+                                <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center text-lg"><i class="fa-solid fa-user-tie"></i></div>
+                                <div><h4 class="font-bold text-sm">Prof. Marcus Sterling</h4><p class="text-xs text-slate-400">Senior Lecturer - Advanced Discrete Mathematics</p></div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            attendance: {
+                title: "Attendance Ledger", icon: "fa-calendar-check",
+                render: () => `
+                    <div class="space-y-4">
+                        <h1 class="text-lg font-bold">Attendance Matrix Operations</h1>
+                        <p class="text-xs text-slate-400">System compliance reporting pipelines and validation trackers</p>
+                        <div class="p-4 bg-white dark:bg-slate-900 border rounded-2xl text-xs text-center text-slate-500">
+                            <i class="fa-solid fa-qrcode text-4xl text-slate-300 mb-2 block"></i>
+                            Dynamic Check-in Framework actively synchronized via Firestore connection parameters.
+                        </div>
+         
