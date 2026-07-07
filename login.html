@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Portal - EduFlow</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-auth {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .dark .glass-auth {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex items-center justify-center p-4 relative overflow-x-hidden transition-colors duration-300">
+
+    <div class="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-brand-400/20 dark:bg-brand-600/10 blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-400/20 dark:bg-indigo-600/10 blur-[120px] pointer-events-none"></div>
+
+    <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full"></div>
+
+    <div class="w-full max-w-lg glass-auth rounded-2xl shadow-2xl border p-8 relative z-10 transition-all duration-300">
+        
+        <div class="flex flex-col items-center mb-8 text-center">
+            <div class="p-3 bg-brand-600 text-white rounded-2xl shadow-lg shadow-brand-500/30 mb-3">
+                <i class="fa-solid fa-graduation-cap text-2xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent">EduFlow System Access</h1>
+            <p id="authSubtitle" class="text-xs text-slate-500 dark:text-slate-400 mt-1">Provide credential records to instantiate session management</p>
+        </div>
+
+        <div id="roleSelectorContainer" class="mb-6">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Select Account Role Context</label>
+            <div class="grid grid-cols-3 gap-2">
+                <button type="button" data-role="student" class="role-btn py-2.5 px-3 text-xs font-medium rounded-xl border border-brand-500 bg-brand-50/50 text-brand-600 dark:bg-brand-950/40 dark:text-brand-400 flex flex-col items-center gap-1 transition-all">
+                    <i class="fa-solid fa-user-graduate text-base"></i> Student
+                </button>
+                <button type="button" data-role="faculty" class="role-btn py-2.5 px-3 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-600 dark:text-slate-400 flex flex-col items-center gap-1 hover:border-slate-300 dark:hover:border-slate-700 transition-all">
+                    <i class="fa-solid fa-chalkboard-user text-base"></i> Faculty
+                </button>
+                <button type="button" data-role="admin" class="role-btn py-2.5 px-3 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-slate-600 dark:text-slate-400 flex flex-col items-center gap-1 hover:border-slate-300 dark:hover:border-slate-700 transition-all">
+                    <i class="fa-solid fa-user-shield text-base"></i> Admin
+                </button>
+            </div>
+        </div>
+
+        <div id="authTabs" class="flex border-b border-slate-200 dark:border-slate-800 mb-6 text-sm font-medium">
+            <button id="tabLogin" class="flex-1 pb-3 text-center border-b-2 border-brand-600 text-brand-600 dark:text-brand-400 font-semibold transition">Sign In</button>
+            <button id="tabSignup" class="flex-1 pb-3 text-center border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition">Create Account</button>
+        </div>
+
+        <form id="authForm" novalidate class="space-y-4">
+            
+            <div id="fieldFullName" class="hidden">
+                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Full Legal Name</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-user text-xs"></i></span>
+                    <input type="text" id="inputName" placeholder="Alex Rivers" class="w-full pl-9 pr-4 py-2.5 text-sm rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-brand-500 dark:focus:border-brand-500 transition">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Institutional Email Address</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-envelope text-xs"></i></span>
+                    <input type="email" id="inputEmail" placeholder="name@institution.edu" required class="w-full pl-9 pr-4 py-2.5 text-sm rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-brand-500 dark:focus:border-brand-500 transition">
+                </div>
+            </div>
+
+            <div id="fieldPassword">
+                <div class="flex justify-between items-center mb-1">
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400">Password Blueprint</label>
+                    <button type="button" id="btnForgotPassword" class="text-xs text-brand-600 dark:text-brand-400 hover:underline transition">Forgot Password?</button>
+                </div>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-lock text-xs"></i></span>
+                    <input type="password" id="inputPassword" placeholder="••••••••••••" required class="w-full pl-9 pr-10 py-2.5 text-sm rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-brand-500 dark:focus:border-brand-500 transition">
+                    <button type="button" id="togglePasswordVisibility" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><i class="fa-solid fa-eye text-xs"></i></button>
+                </div>
+            </div>
+
+            <button type="submit" id="btnSubmit" class="w-full py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold text-sm shadow-lg shadow-brand-600/20 flex items-center justify-center gap-2 transition-all mt-2">
+                <span>Authenticate Session</span> <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
+            </button>
+        </form>
+
+        <div id="backToSignInContainer" class="hidden mt-6 text-center">
+            <button type="button" id="btnBackToSignIn" class="text-xs text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 flex items-center justify-center gap-1 mx-auto transition">
+                <i class="fa-solid fa-arrow-left text-[10px]"></i> Return to Authentication Terminal
+            </button>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs text-slate-400">
+            <span>Security Layer: Active TLS 1.3</span>
+            <button id="themeToggle" class="hover:text-slate-600 dark:hover:text-slate-200 transition flex items-center gap-1">
+                <i class="fa-solid fa-circle-half-stroke"></i> System Theme
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Form Configurations & State Vectors
+        let currentMode = 'login'; // login, signup, forgot
+        let selectedRole = 'student';
+
+        const toastContainer = document.getElementById('toastContainer');
+        const authForm = document.getElementById('authForm');
+        const authTabs = document.getElementById('authTabs');
+        const tabLogin = document.getElementById('tabLogin');
+        const tabSignup = document.getElementById('tabSignup');
+        const fieldFullName = document.getElementById('fieldFullName');
+        const fieldPassword = document.getElementById('fieldPassword');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const btnForgotPassword = document.getElementById('btnForgotPassword');
+        const backToSignInContainer = document.getElementById('backToSignInContainer');
+        const btnBackToSignIn = document.getElementById('btnBackToSignIn');
+        const authSubtitle = document.getElementById('authSubtitle');
+        const roleSelectorContainer = document.getElementById('roleSelectorContainer');
+        const themeToggle = document.getElementById('themeToggle');
+
+        // Dark/Light initialization
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Parse query params to catch 'signup=true' configurations
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('signup') === 'true') {
+            setMode('signup');
+        }
+
+        // Role Toggler selection execution
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.role-btn').forEach(b => {
+                    b.classList.remove('border-brand-500', 'bg-brand-50/50', 'text-brand-600', 'dark:bg-brand-950/40', 'dark:text-brand-400');
+                    b.classList.add('border-slate-200', 'dark:border-slate-800', 'bg-white/50', 'dark:bg-slate-900/50', 'text-slate-600', 'dark:text-slate-400');
+                });
+                btn.classList.remove('border-slate-200', 'dark:border-slate-800', 'bg-white/50', 'dark:bg-slate-900/50', 'text-slate-600', 'dark:text-slate-400');
+                btn.classList.add('border-brand-500', 'bg-brand-50/50', 'text-brand-600', 'dark:bg-brand-950/40', 'dark:text-brand-400');
+                selectedRole = btn.getAttribute('data-role');
+            });
+        });
+
+        // Tabs Clicking Configuration
+        tabLogin.addEventListener('click', () => setMode('login'));
+        tabSignup.addEventListener('click', () => setMode('signup'));
+        btnForgotPassword.addEventListener('click', () => setMode('forgot'));
+        btnBackToSignIn.addEventListener('click', () => setMode('login'));
+
+        function setMode(mode) {
+            currentMode = mode;
+            // Clear standard inputs
+            document.getElementById('inputEmail').value = '';
+            document.getElementById('inputPassword').value = '';
+            document.getElementById('inputName').value = '';
+
+            if (mode === 'login') {
+                authTabs.classList.remove('hidden');
+                roleSelectorContainer.classList.remove('hidden');
+                fieldFullName.classList.add('hidden');
+                fieldPassword.classList.remove('hidden');
+                backToSignInContainer.classList.add('hidden');
+                authSubtitle.innerText = "Provide credential records to instantiate session management";
+                btnSubmit.querySelector('span').innerText = "Authenticate Session";
+                tabLogin.className = "flex-1 pb-3 text-center border-b-2 border-brand-600 text-brand-600 dark:text-brand-400 font-semibold transition";
+                tabSignup.className = "flex-1 pb-3 text-center border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition";
+            } else if (mode === 'signup') {
+                authTabs.classList.remove('hidden');
+                roleSelectorContainer.classList.remove('hidden');
+                fieldFullName.classList.remove('hidden');
+                fieldPassword.classList.remove('hidden');
+                backToSignInContainer.classList.add('hidden');
+                authSubtitle.innerText = "Provision a comprehensive system operational identity context";
+                btnSubmit.querySelector('span').innerText = "Initialize System Record";
+                tabSignup.className = "flex-1 pb-3 text-center border-b-2 border-brand-600 text-brand-600 dark:text-brand-400 font-semibold transition";
+                tabLogin.className = "flex-1 pb-3 text-center border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition";
+            } else if (mode === 'forgot') {
+                authTabs.classList.add('hidden');
+                roleSelectorContainer.classList.add('hidden');
+                fieldFullName.classList.add('hidden');
+                fieldPassword.classList.add('hidden');
+                backToSignInContainer.classList.remove('hidden');
+                authSubtitle.innerText = "Transmit token confirmation blueprint schema to email";
+                btnSubmit.querySelector('span').innerText = "Send Recovery Email Token";
+            }
+        }
+
+        // View/Hide password logic
+        document.getElementById('togglePasswordVisibility').addEventListener('click', () => {
+            const pwdInput = document.getElementById('inputPassword');
+            const icon = document.getElementById('togglePasswordVisibility').querySelector('i');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                icon.className = "fa-solid fa-eye-slash text-xs";
+            } else {
+                pwdInput.type = 'password';
+                icon.className = "fa-solid fa-eye text-xs";
+            }
+        });
+
+        // Toast Trigger Pipeline Engine
+        function triggerToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `p-4 rounded-xl shadow-xl flex items-start gap-3 border text-xs font-medium transition duration-300 transform translate-y-2 opacity-0`;
+            
+            let iconCode = `<i class="fa-solid fa-circle-info text-blue-500"></i>`;
+            if (type === 'success') {
+                toast.classList.add('bg-white', 'dark:bg-slate-900', 'border-emerald-500/30');
+                iconCode = `<i class="fa-solid fa-circle-check text-emerald-500 text-base"></i>`;
+            } else if (type === 'error') {
+                toast.classList.add('bg-white', 'dark:bg-slate-900', 'border-rose-500/30');
+                iconCode = `<i class="fa-solid fa-circle-exclamation text-rose-500 text-base"></i>`;
+            } else {
+                toast.classList.add('bg-white', 'dark:bg-slate-900', 'border-slate-200', 'dark:border-slate-800');
+            }
+
+            toast.innerHTML = `
+                ${iconCode}
+                <div class="flex-1">
+                    <p class="text-slate-800 dark:text-slate-200">${message}</p>
+                </div>
+            `;
+            toastContainer.appendChild(toast);
+            
+            // Reflow trigger for transition animation tracking
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-[-10px]');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Intercepting Submit Protocols for Route Switching Configuration
+        authForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const emailValue = document.getElementById('inputEmail').value.trim();
+
+            if (!emailValue) {
+                triggerToast('Authentication targeting matrix requires valid input values.', 'error');
+                return;
+            }
+
+            btnSubmit.disabled = true;
+            const innerSpan = btnSubmit.querySelector('span');
+            const originalText = innerSpan.innerText;
+            innerSpan.innerText = "Processing Node Matrix...";
+
+            setTimeout(() => {
+                btnSubmit.disabled = false;
+                innerSpan.innerText = originalText;
+
+                if (currentMode === 'forgot') {
+                    triggerToast(`Token verification schema link dispatched to: ${emailValue}`, 'success');
+                    setMode('login');
+                } else if (currentMode === 'signup') {
+                    triggerToast('System data records successfully generated. Dispatched system confirmation validation to inbox.', 'success');
+                    setMode('login');
+                } else {
+                    triggerToast('Access token verification passed. Allocating session infrastructure mapping...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                }
+            }, 1200);
+        });
+    </script>
+</body>
+</html>
