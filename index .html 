@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFlow - AI-Powered Student Management System</title>
+    <meta name="description" content="EduFlow is an enterprise-grade, cloud-based, AI-powered Student Management System designed to optimize institutional administration, student tracking, and smart learning analytics.">
+    <meta name="keywords" content="Student Management System, AI Education, LMS, School ERP, EdTech, Cloud Academic Software">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="EduFlow - AI-Powered Student Management System">
+    <meta property="og:description" content="Optimize institutional efficiency with cloud automation and predictive AI metrics.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        .dark .glassmorphism {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300">
+
+    <nav class="sticky top-0 z-50 w-full glassmorphism border-b border-slate-200/50 dark:border-slate-700/50 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <div class="p-2 bg-brand-600 text-white rounded-xl shadow-lg shadow-brand-500/30">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    </div>
+                    <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-500 dark:to-indigo-400 bg-clip-text text-transparent">EduFlow</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8 font-medium">
+                    <a href="#features" class="hover:text-brand-600 dark:hover:text-brand-400 transition">Features</a>
+                    <a href="#ai-modules" class="hover:text-brand-600 dark:hover:text-brand-400 transition">AI Capability</a>
+                    <a href="#modules" class="hover:text-brand-600 dark:hover:text-brand-400 transition">Modules</a>
+                    <a href="#testimonials" class="hover:text-brand-600 dark:hover:text-brand-400 transition">Reviews</a>
+                    <a href="#faq" class="hover:text-brand-600 dark:hover:text-brand-400 transition">FAQ</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="themeToggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition" aria-label="Toggle Dark Mode">
+                        <i class="fa-solid fa-moon dark:hidden"></i>
+                        <i class="fa-solid fa-sun hidden dark:inline"></i>
+                    </button>
+                    <a href="login.html" class="hidden sm:inline-block px-4 py-2 text-sm font-semibold border border-slate-300 dark:border-slate-600 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition">Sign In</a>
+                    <a href="login.html?signup=true" class="px-4 py-2 text-sm font-semibold bg-brand-600 text-white rounded-xl hover:bg-brand-700 shadow-lg shadow-brand-600/20 transition">Get Started</a>
+                    <button id="menuToggle" class="md:hidden p-2 text-slate-600 dark:text-slate-300" aria-label="Toggle Menu">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden px-4 pt-2 pb-4 space-y-2 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
+            <a href="#features" class="block py-2 text-base font-medium">Features</a>
+            <a href="#ai-modules" class="block py-2 text-base font-medium">AI Capability</a>
+            <a href="#modules" class="block py-2 text-base font-medium">Modules</a>
+            <a href="#testimonials" class="block py-2 text-base font-medium">Reviews</a>
+            <a href="#faq" class="block py-2 text-base font-medium">FAQ</a>
+            <div class="pt-4 border-t border-slate-200 dark:border-slate-700 flex flex-col gap-2">
+                <a href="login.html" class="w-full text-center py-2 border rounded-xl">Sign In</a>
+                <a href="login.html?signup=true" class="w-full text-center py-2 bg-brand-600 text-white rounded-xl">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative overflow-hidden pt-16 pb-20 lg:pt-24 lg:pb-28">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 text-center lg:text-left">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold tracking-wide uppercase rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/50 dark:text-brand-300 mb-6">
+                        <i class="fa-solid fa-sparkles text-brand-600 dark:text-brand-400"></i> Next-Gen Academic ERP
+                    </span>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-none mb-6">
+                        Transform Institution Management with <span class="bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent">Predictive AI</span>
+                    </h1>
+                    <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto lg:mx-0 mb-8">
+                        EduFlow coordinates administrative workflows, tracks student metrics, automates billing structures, and utilizes machine learning models to identify drop-out patterns and performance vectors early.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                        <a href="login.html?signup=true" class="px-8 py-4 text-base font-semibold bg-brand-600 text-white rounded-xl hover:bg-brand-700 shadow-xl shadow-brand-600/20 flex items-center justify-center gap-2 transition">
+                            Deploy System Now <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="#features" class="px-8 py-4 text-base font-semibold border border-slate-300 dark:border-slate-700 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center gap-2 transition">
+                            Explore Capabilities
+                        </a>
+                    </div>
+                </div>
+                <div class="lg:col-span-5 relative">
+                    <div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-brand-500 to-indigo-500 opacity-30 blur-xl"></div>
+                    <div class="relative glassmorphism rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-2xl">
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3 mb-4">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-red-400"></span>
+                                <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+                                <span class="w-3 h-3 rounded-full bg-green-400"></span>
+                            </div>
+                            <span class="text-xs text-slate-400 font-mono">dashboard_preview.json</span>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-xs font-semibold text-slate-500 uppercase">System Analytics</span>
+                                    <span class="text-xs font-medium text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">+14.2%</span>
+                                </div>
+                                <div class="text-2xl font-bold">14,240 Retention Score</div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
+                                    <span class="text-xs font-semibold text-slate-500 uppercase block mb-1">Attendance Trend</span>
+                                    <span class="text-xl font-bold">94.8%</span>
+                                </div>
+                                <div class="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
+                                    <span class="text-xs font-semibold text-slate-500 uppercase block mb-1">Active Modules</span>
+                                    <span class="text-xl font-bold">17/17</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="border-y border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/50 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <p class="text-3xl sm:text-4xl font-extrabold text-brand-600 dark:text-brand-400">99.9%</p>
+                    <p class="text-sm font-medium text-slate-500 mt-1">System Uptime SLA</p>
+                </div>
+                <div>
+                    <p class="text-3xl sm:text-4xl font-extrabold text-brand-600 dark:text-brand-400">50k+</p>
+                    <p class="text-sm font-medium text-slate-500 mt-1">Active Profiles Managed</p>
+                </div>
+                <div>
+                    <p class="text-3xl sm:text-4xl font-extrabold text-brand-600 dark:text-brand-400">&lt; 250ms</p>
+                    <p class="text-sm font-medium text-slate-500 mt-1">API Endpoint Latency</p>
+                </div>
+                <div>
+                    <p class="text-3xl sm:text-4xl font-extrabold text-brand-600 dark:text-brand-400">30%</p>
+                    <p class="text-sm font-medium text-slate-500 mt-1">Operational Savings Rate</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-20 lg:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Enterprise Architecture Built forScale</h2>
+                <p class="text-lg text-slate-600 dark:text-slate-400">Deploy high-performance student administration tools. Restrict permissions, update logs instantly, and centralize operational processes.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="p-8 bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-xl bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-xl mb-6">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Role-Based Access Control</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Enforce strict data boundaries between Super Admins, Departmental Directors, Faculty Personnel, and Students.</p>
+                </div>
+                <div class="p-8 bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl mb-6">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Live Institutional Analytics</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Review financial ledger variations, dynamic attendance fluctuations, and cumulative pass rates in real time via Chart.js integration.</p>
+                </div>
+                <div class="p-8 bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl mb-6">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Instant Data Pipelines</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Powered by Firestore listeners to ensure assignments, syllabus updates, and urgent text alerts match immediately across all user screens.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ai-modules" class="py-20 lg:py-24 bg-gradient-to-b from-transparent to-brand-50/50 dark:to-brand-950/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400 px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-900/30">Next-Gen Intelligence</span>
+                <h2 class="text-3xl font-bold tracking-tight sm:text-4xl mt-3 mb-4">Integrated Cognitive Academic Layers</h2>
+                <p class="text-lg text-slate-600 dark:text-slate-400">Shift from passive database archival systems to predictive analytics framework layers.</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-6 bg-white/80 dark:bg-slate-800/60 glassmorphism rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <i class="fa-solid fa-brain-circuit text-2xl text-brand-500 mb-4 block"></i>
+                    <h4 class="font-bold text-base mb-2">Attendance Forecast Vectors</h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Evaluates linear attendance trajectories to highlight profiles slipping under legal minimum compliance thresholds before deadlines arrive.</p>
+                </div>
+                <div class="p-6 bg-white/80 dark:bg-slate-800/60 glassmorphism rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <i class="fa-solid fa-chart-radar text-2xl text-indigo-500 mb-4 block"></i>
+                    <h4 class="font-bold text-base mb-2">GPA Degradation Triggers</h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Processes past grade matrices to pinpoint structural drops, matching corresponding profiles with immediate faculty tutoring options.</p>
+                </div>
+                <div class="p-6 bg-white/80 dark:bg-slate-800/60 glassmorphism rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <i class="fa-solid fa-file-wand text-2xl text-violet-500 mb-4 block"></i>
+                    <h4 class="font-bold text-base mb-2">Natural Language Digesting</h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Transforms multi-page lecture assets and research reference libraries into concise bullet markdown summaries and test items instantly.</p>
+                </div>
+                <div class="p-6 bg-white/80 dark:bg-slate-800/60 glassmorphism rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <i class="fa-solid fa-wand-magic-sparkles text-2xl text-emerald-500 mb-4 block"></i>
+                    <h4 class="font-bold text-base mb-2">Resume Score Profilers</h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Compares student resume drafts against market placement benchmarks to propose formatting fixes and keyword addition items.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="modules" class="py-20 lg:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Seventeen Consolidated System Modules</h2>
+                <p class="text-lg text-slate-600 dark:text-slate-400">Eliminate data fragmentation. Maintain student profiles, fees, library books, and campus housing coordinates inside a unified schema layout.</p>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div class="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60 rounded-xl flex gap-4 items-start">
+                    <div class="text-brand-600 text-lg mt-1"><i class="fa-solid fa-user-gradient"></i></div>
+                    <div><h5 class="font-semibold text-sm mb-1">Student Infrastructure</h5><p class="text-xs text-slate-500 dark:text-slate-400">Complete profile archiving, track records, and manage lifecycle phases.</p></div>
+                </div>
+                <div class="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60 rounded-xl flex gap-4 items-start">
+                    <div class="text-brand-600 text-lg mt-1"><i class="fa-solid fa-chalkboard-user"></i></div>
+                    <div><h5 class="font-semibold text-sm mb-1">Faculty Directories</h5><p class="text-xs text-slate-500 dark:text-slate-400">Coordinate teaching rosters, departmental lines, and monitor active assignments.</p></div>
+                </div>
+                <div class="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:bord
